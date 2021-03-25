@@ -7,6 +7,7 @@ final class APIController : RouteCollection {
     func boot(router: Router) throws {
         router.get("/", use: allAds)
         router.post("/episodes", use: episodes)
+        router.post("/getLink", use: getLink)
     }
     
     func allAds( _ req : Request) -> Future<splashResponse> {
@@ -20,10 +21,18 @@ final class APIController : RouteCollection {
     
     func episodes( _ req : Request) -> Future<[Episode]> {
         print(req.http)
-        return dispatch(request: req, handler: { _ -> [Episode]in
+        return dispatch(request: req, handler: { _ -> [Episode] in
             let id = try req.content.decode(episodesRequest.self).wait().series_id
             let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait()
             return episodes
+        })
+    }
+    
+    func getLink(_ req : Request) -> Future<String> {
+        return dispatch(request: req, handler: { _ -> String in
+            let episode_id = try req.content.decode(linkRequest.self).wait().episode_id
+            guard let link = try Episode.find(episode_id, on: req).wait()?.filename else { throw Abort(.notFound) }
+            return link
         })
     }
 }
@@ -42,4 +51,8 @@ final class splashResponse : Content {
 
 struct episodesRequest : Content {
     var series_id : Int
+}
+
+struct linkRequest : Content {
+    var episode_id : Int
 }
