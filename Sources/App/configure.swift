@@ -1,10 +1,10 @@
-import FluentSQLite
 import Vapor
+import FluentMySQL
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     // Register providers first
-    try services.register(FluentSQLiteProvider())
+    try services.register(FluentMySQLProvider())
 
     // Register routes to the router
     let router = EngineRouter.default()
@@ -18,15 +18,17 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(middlewares)
 
     // Configure a SQLite database
-    let sqlite = try SQLiteDatabase(storage: .memory)
-
-    // Register the configured SQLite database to the database config.
     var databases = DatabasesConfig()
-    databases.add(database: sqlite, as: .sqlite)
+    let databaseConfig = MySQLDatabaseConfig(hostname: "localhost", username: "root", password: "fady", database: "drmdnapi")
+    let database = MySQLDatabase(config: databaseConfig)
+    databases.add(database: database, as: .mysql)
     services.register(databases)
 
     // Configure migrations
     var migrations = MigrationConfig()
-    migrations.add(model: Todo.self, database: .sqlite)
+    migrations.add(model: Series.self, database: DatabaseIdentifier<Series.Database>.mysql)
+    migrations.add(model: Episode.self, database: DatabaseIdentifier<Episode.Database>.mysql)
+    migrations.add(model: ApiControl.self, database: DatabaseIdentifier<ApiControl.Database>.mysql)
+    migrations.add(model: Category.self, database: DatabaseIdentifier<Category.Database>.mysql)
     services.register(migrations)
 }
