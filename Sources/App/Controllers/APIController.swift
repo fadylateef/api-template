@@ -5,9 +5,9 @@ import FluentMySQL
 final class APIController : RouteCollection {
     /// Returns a list of all `Todo`s.
     func boot(router: Router) throws {
-        router.get("/", use: allAds)
-        router.post("/episodes", use: episodes)
-        router.post("/getLink", use: getLink)
+        router.get("/ios/splash", use: allAds)
+        router.post("/ios/episodes", use: episodes)
+        router.post("/ios/getLink", use: getLink)
     }
     
     func allAds( _ req : Request) -> Future<splashResponse> {
