@@ -23,3 +23,19 @@ extension APIAccessMiddleware: ServiceType {
     return try .init()
   }
 }
+
+struct APIAccessMiddleware2: Middleware {
+    func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> {
+        guard request.http.headers.firstValue(name: HTTPHeaderName("api-key")) == "01273362-0e3d-4397-bb0b-1e764500edxx"
+        else {
+            throw Abort(.unauthorized)
+        }
+        return try next.respond(to: request)
+    }
+}
+
+extension APIAccessMiddleware2: ServiceType {
+    static func makeService(for container: Container) throws -> APIAccessMiddleware2 {
+        return try .init()
+    }
+}

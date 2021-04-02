@@ -5,9 +5,15 @@ import FluentMySQL
 final class APIController : RouteCollection {
     /// Returns a list of all `Todo`s.
     func boot(router: Router) throws {
-        router.get("/ios/splash", use: allAds)
-        router.post("/ios/episodes", use: episodes)
-        router.post("/ios/getLink", use: getLink)
+        let prot = router.grouped(APIAccessMiddleware.self)
+        prot.get("/ios/splash", use: allAds)
+        prot.post("/ios/episodes", use: episodes)
+        prot.post("/ios/getLink", use: getLink)
+        
+        let droid = router.grouped(APIAccessMiddleware2.self)
+        droid.get("/android/all", use: allDroid)
+        droid.post("/android/episodes", use : episodes)
+        droid.post("/android/getLink", use: getLink)
     }
     
     func allAds( _ req : Request) -> Future<splashResponse> {
@@ -16,6 +22,14 @@ final class APIController : RouteCollection {
             let categories = try Category.query(on: req).all().wait()
             guard let api = try ApiControl.find(1, on: req).wait() else { throw Abort(.notFound)}
             return splashResponse(serieses: serieses, categories: categories,apiControl: api)
+        })
+    }
+    
+    func allDroid( _ req : Request) -> Future<droidResponse> {
+        return dispatch(request: req, handler: { _ -> droidResponse in
+            let serieses = try Series.query(on: req).all().wait()
+            let categories = try Category.query(on: req).all().wait()
+            return droidResponse(serieses: serieses, categories: categories)
         })
     }
     
@@ -47,6 +61,16 @@ final class splashResponse : Content {
     var serieses : [Series]
     var categories : [Category]
     var apiControl : ApiControl
+}
+
+final class droidResponse : Content {
+    init(serieses: [Series], categories: [Category]) {
+        self.serieses = serieses
+        self.categories = categories
+    }
+    
+    var serieses : [Series]
+    var categories : [Category]
 }
 
 struct episodesRequest : Content {
