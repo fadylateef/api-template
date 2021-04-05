@@ -14,6 +14,11 @@ final class APIController : RouteCollection {
         droid.get("/android/all", use: allDroid)
         droid.post("/android/episodes", use : episodes)
         droid.post("/android/getLink", use: getLink)
+        
+        let ios2 = router.grouped(APIAccessMiddleware.self)
+        ios2.get("/ios2/all", use: allIos2)
+        ios2.post("/ios2/episodes", use : episodes)
+        ios2.post("/ios2/getLink", use: getLink)
     }
     
     func allAds( _ req : Request) -> Future<splashResponse> {
@@ -30,6 +35,15 @@ final class APIController : RouteCollection {
             let serieses = try Series.query(on: req).all().wait()
             let categories = try Category.query(on: req).all().wait()
             return droidResponse(serieses: serieses, categories: categories)
+        })
+    }
+    
+    func allIos2( _ req : Request) -> Future<splashResponse> {
+        return dispatch(request: req, handler: { _ -> splashResponse in
+            let serieses = try Series.query(on: req).all().wait()
+            let categories = try Category.query(on: req).all().wait()
+            guard let api = try ApiControl.find(2, on: req).wait() else { throw Abort(.notFound)}
+            return splashResponse(serieses: serieses, categories: categories,apiControl: api)
         })
     }
     
