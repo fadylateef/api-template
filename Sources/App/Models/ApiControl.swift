@@ -9,7 +9,7 @@ import Vapor
 import FluentMySQL
 
 final class ApiControl: MySQLModel {
-    init(id: Int? = nil, api: Bool, tvLink: String, apiUpdate: Bool, apiJB: Bool, apiAB: Bool, apiUpdateLink: String, apiPlus: Bool, apiPlusPrefix: String, loop1: String, loop2: String, loopTime: Int,ad : Int) {
+    init(id: Int? = nil, api: Bool, tvLink: String, apiUpdate: Bool, apiJB: Bool, apiAB: Bool, apiUpdateLink: String, apiPlus: Bool, apiPlusPrefix: String, loop1: String, loop2: String, loopTime: Int,ad : Int,epis : Int) {
         self.id = id
         self.api = api
         self.tvLink = tvLink
@@ -23,6 +23,7 @@ final class ApiControl: MySQLModel {
         self.loop2 = loop2
         self.loopTime = loopTime
         self.ad = ad
+        self.epis = epis
     }
     
     
@@ -39,6 +40,7 @@ final class ApiControl: MySQLModel {
     var loop2 : String
     var loopTime : Int
     var ad : Int
+    var epis : Int
 }
 
 extension ApiControl: Migration { }
