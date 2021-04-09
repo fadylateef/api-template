@@ -35,7 +35,8 @@
     
     <script>
           var rows = document.getElementsByTagName("table")[0].rows;
-          ws = new WebSocket("ws://localhost:8080/echo");
+          console.log("hello");
+          ws = new WebSocket("wss://drmdn.app/echo");
             ws.onmessage = function (event) {
             var row = rows[1];
             var cell = row.cells[row.cells.length - 1];
