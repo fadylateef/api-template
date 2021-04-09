@@ -37,7 +37,7 @@
             ws = new WebSocket("wss://drmdn.app/echo");
             let row_id = event
             ws.onmessage = function (event) {
-                var response = event.split(',')
+                var response = event.data.split(',')
                 var row = rows[response[0]];
                 var cell = row.cells[row.cells.length - 1];
                 cell.innerHTML = response[1];
