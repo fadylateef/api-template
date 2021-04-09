@@ -1,6 +1,8 @@
 import Vapor
 import FluentMySQL
 
+let wss = NIOWebSocketServer.default()
+
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     // Register providers first
@@ -35,4 +37,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: ApiControl.self, database: DatabaseIdentifier<ApiControl.Database>.mysql)
     migrations.add(model: Category.self, database: DatabaseIdentifier<Category.Database>.mysql)
     services.register(migrations)
+    
+
+
+
+
+    // Register our server
+    services.register(wss, as: WebSocketServer.self)
 }
