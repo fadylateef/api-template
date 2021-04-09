@@ -1,5 +1,6 @@
 import Vapor
 import FluentMySQL
+import Leaf
 
 let wss = NIOWebSocketServer.default()
 
@@ -7,7 +8,7 @@ let wss = NIOWebSocketServer.default()
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     // Register providers first
     try services.register(FluentMySQLProvider())
-    
+    try services.register(LeafProvider())
     services.register(APIAccessMiddleware.self)
     services.register(APIAccessMiddleware2.self)
 
@@ -44,4 +45,6 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     // Register our server
     services.register(wss, as: WebSocketServer.self)
+    // Web Renderer
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
 }

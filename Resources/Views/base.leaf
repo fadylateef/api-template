@@ -1,0 +1,60 @@
+<html>
+<head>
+    <title>CPanel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+    <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col" style="width: 50px">ID</th>
+      <th scope="col">Series Name</th>
+      <th scope="col" style="width: 50px">Last Episode</th>
+      <th scope="col">Episode Link</th>
+      <th scope="col" style="width: 150px">Add Epsiode</th>
+      <th scope="col" style="width: 500px">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+        #for(result in results) {
+        <tr>
+      <th scope="row">#(result.id)</th>
+      <td>#(result.name)</td>
+      <td>#(result.last_episode)</td>
+      <td>
+        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Put your video link here.">
+      </td>
+        <td>
+            <button id="btn-1" type="button" class="btn btn-primary" onclick="download(#(result.id))">Download</button>
+        </td>
+        <td></td>
+    </tr>
+    }
+  </tbody>
+</table>
+    
+    <script>
+          var rows = document.getElementsByTagName("table")[0].rows;
+          ws = new WebSocket("ws://localhost:8080/echo");
+            ws.onmessage = function (event) {
+            var row = rows[1];
+            var cell = row.cells[row.cells.length - 1];
+            cell.innerHTML = event.data;
+            }
+function download(event) {
+        var row = rows[event];
+        let series_id = row.cells[0].innerHTML;
+        console.log(series_id);
+        let episode_id = row.cells[2].innerHTML;
+        console.log(episode_id);
+        let episode_link = row.cells[3].firstElementChild.value;
+        console.log(episode_link);
+        let btn = row.cells[4].firstElementChild;
+        btn.setAttribute("disabled","");
+        btn.innerHTML = "Loading ..";
+        ws.send(`${series_id},${episode_id},${episode_link}`);
+}
+</script>
+    
+</body>
+</html>
