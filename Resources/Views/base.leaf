@@ -22,41 +22,36 @@
       <td>#(result.name)</td>
       <td>#(result.last_episode)</td>
       <td>
-        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Put your video link here.">
+        <input type="text" class="form-control" placeholder="Put your video link here.">
       </td>
         <td>
-            <button id="btn-1" type="button" class="btn btn-primary" onclick="download(#(result.id))">Download</button>
+            <button type="button" class="btn btn-primary" onclick="download(#(result.id))">Download</button>
         </td>
         <td></td>
     </tr>
     }
   </tbody>
 </table>
-    
-    <script>
-          var rows = document.getElementsByTagName("table")[0].rows;
-
-function download(event) {
+<script>
+            var rows = document.getElementsByTagName("table")[0].rows;
             ws = new WebSocket("wss://drmdn.app/echo");
             let row_id = event
             ws.onmessage = function (event) {
-            var row = rows[row_id];
-            var cell = row.cells[row.cells.length - 1];
-            cell.innerHTML = event.data;
+                var response = event.split(',')
+                var row = rows[response[0]];
+                var cell = row.cells[row.cells.length - 1];
+                cell.innerHTML = response[1];
             }
-        var row = rows[event];
-        let series_id = row.cells[0].innerHTML;
-        console.log(series_id);
-        let episode_id = row.cells[2].innerHTML;
-        console.log(episode_id);
-        let episode_link = row.cells[3].firstElementChild.value;
-        console.log(episode_link);
-        let btn = row.cells[4].firstElementChild;
-        btn.setAttribute("disabled","");
-        btn.innerHTML = "Loading ..";
-        ws.send(`${series_id},${episode_id},${episode_link}`);
-}
+    function download(event) {
+            var row = rows[event];
+            let series_id = row.cells[0].innerHTML;
+            let episode_id = row.cells[2].innerHTML;
+            let episode_link = row.cells[3].firstElementChild.value;
+            let btn = row.cells[4].firstElementChild;
+            btn.setAttribute("disabled","");
+            btn.innerHTML = "Loading ..";
+            ws.send(`${series_id},${episode_id},${episode_link}`);
+    }
 </script>
-    
 </body>
 </html>
