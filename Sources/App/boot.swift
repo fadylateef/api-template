@@ -25,13 +25,13 @@ public func boot(_ app: Application) throws {
                 guard let epi_length = Int(episode_length) else { return }
                 let episode_duration = epi_length / 60000
                 ws.send(text: "\(series_id),3/6 TS Screenshot ...")
-                try shellOut(to: "ffmpeg -ss 00:5:00 -i /videos/\(series_id)/\(videoName) -vframes 1 -q:v 20 /images/\(series_id)/\(imageName)")
+                try shellOut(to: "ffmpeg -ss 00:5:00 -i /videos/\(series_id)/\(videoName) -vframes 1 -q:v 20 /images/\(imageName)")
                 ws.send(text: "\(series_id),4/6 TS Conversion ...")
                 try shellOut(to: "ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName)")
                 ws.send(text: "\(series_id),5/6 Saving to DB ...")
                 let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
                 guard let newEpisode = try? newEpi.save(on: req) else { return }
-                ws.send(text: "\(series_id),6/6 Done ✅")
+                ws.send(text: "\(series_id),Done ✅")
             }catch {
                 print(error)
                 ws.send(text: "\(series_id),⛔️ Error : \n \(error)")
