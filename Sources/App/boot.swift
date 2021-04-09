@@ -30,7 +30,7 @@ public func boot(_ app: Application) throws {
                 try shellOut(to: "ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName)")
                 ws.send(text: "5/6 Saving to DB ...")
                 let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
-                guard let newEpisode = try? newEpi.save(on: req).wait() else { return }
+                guard let newEpisode = try? newEpi.save(on: req) else { return }
                 ws.send(text: "6/6 Done ✅")
             }catch {
                 print(error)

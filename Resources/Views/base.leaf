@@ -35,14 +35,15 @@
     
     <script>
           var rows = document.getElementsByTagName("table")[0].rows;
-          console.log("hello");
-          ws = new WebSocket("wss://drmdn.app/echo");
+
+function download(event) {
+            ws = new WebSocket("wss://drmdn.app/echo");
+            let row_id = event
             ws.onmessage = function (event) {
-            var row = rows[1];
+            var row = rows[row_id];
             var cell = row.cells[row.cells.length - 1];
             cell.innerHTML = event.data;
             }
-function download(event) {
         var row = rows[event];
         let series_id = row.cells[0].innerHTML;
         console.log(series_id);
