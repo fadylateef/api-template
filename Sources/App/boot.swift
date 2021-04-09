@@ -37,9 +37,6 @@ public func boot(_ app: Application) throws {
                 ws.send(text: "\(series_id),⛔️ Error : \n \(error)")
                 return
             }
-            
-            
-            
         }
     }
     

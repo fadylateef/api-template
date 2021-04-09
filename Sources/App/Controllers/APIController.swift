@@ -50,7 +50,7 @@ final class APIController : RouteCollection {
     func episodes( _ req : Request) -> Future<[Episode]> {
         return dispatch(request: req, handler: { _ -> [Episode] in
             let id = try req.content.decode(episodesRequest.self).wait().series_id
-            let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait()
+            let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait().convertToPublich()
             return episodes
         })
     }
@@ -58,8 +58,8 @@ final class APIController : RouteCollection {
     func getLink(_ req : Request) -> Future<String> {
         return dispatch(request: req, handler: { _ -> String in
             let episode_id = try req.content.decode(linkRequest.self).wait().episode_id
-            guard let link = try Episode.find(episode_id, on: req).wait()?.filename else { throw Abort(.notFound) }
-            return link
+            guard let epi = try Episode.find(episode_id, on: req).wait() else { throw Abort(.notFound) }
+            return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
         })
     }
 }

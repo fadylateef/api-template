@@ -31,3 +31,13 @@ extension Episode: Migration { }
 extension Episode: Content { }
 extension Episode: Parameter { }
 
+extension Array where Element == Episode {
+    func convertToPublich() -> [Episode] {
+        return self.map {
+            var epi = $0
+            epi.thumbnail = "https://drmdn.app/img/\(epi.thumbnail!)"
+            return epi
+        }
+    }
+    
+}
