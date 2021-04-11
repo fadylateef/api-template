@@ -30,7 +30,7 @@ final class APIController : RouteCollection {
             guard let api = try ApiControl.find(1, on: req).wait() else { throw Abort(.notFound)}
             guard let ip = req.http.remotePeer.hostname else { throw Abort(.unauthorized) }
             guard let country_code = try req.withNewConnection(to: .mysql, closure: { conn -> EventLoopFuture<mysqlresult?> in
-                return conn.raw("SELECT `country_code` FROM `ip2location_db1` WHERE INET_ATON('\(ip)') <= ip_to LIMIT 1").first(decoding: mysqlresult.self)
+                return conn.raw("SELECT `country_code` FROM `ip2location` WHERE INET_ATON('\(ip)') <= ip_to LIMIT 1").first(decoding: mysqlresult.self)
             }).wait()?.country_code else { throw Abort(.unauthorized)}
             if country_whitelist.contains(country_code) {
                 api.api = true
