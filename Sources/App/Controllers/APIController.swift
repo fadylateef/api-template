@@ -1,6 +1,8 @@
 import Vapor
 import FluentMySQL
 
+var country_whitelist = ["SA","KW","AE","EG","OM","BH","IQ","LY","QA"]
+
 /// Controls basic CRUD operations on `Todo`s.
 final class APIController : RouteCollection {
     /// Returns a list of all `Todo`s.
@@ -26,6 +28,15 @@ final class APIController : RouteCollection {
             let serieses = try Series.query(on: req).all().wait()
             let categories = try Category.query(on: req).all().wait()
             guard let api = try ApiControl.find(1, on: req).wait() else { throw Abort(.notFound)}
+            guard let ip = req.http.remotePeer.hostname else { throw Abort(.unauthorized) }
+            guard let country_code = try req.withNewConnection(to: .mysql, closure: { conn -> EventLoopFuture<mysqlresult?> in
+                return conn.raw("SELECT `country_code` FROM `ip2location_db1` WHERE INET_ATON('\(ip)') <= ip_to LIMIT 1").first(decoding: mysqlresult.self)
+            }).wait()?.country_code else { throw Abort(.unauthorized)}
+            if country_whitelist.contains(country_code) {
+                api.api = true
+            }else {
+                api.api = false
+            }
             return splashResponse(serieses: serieses, categories: categories,apiControl: api)
         })
     }
@@ -92,4 +103,8 @@ struct episodesRequest : Content {
 
 struct linkRequest : Content {
     var episode_id : Int
+}
+
+struct mysqlresult : Content {
+    var country_code : String
 }

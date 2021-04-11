@@ -9,9 +9,9 @@
     <tr>
       <th scope="col" style="width: 50px">ID</th>
       <th scope="col">Series Name</th>
-      <th scope="col" style="width: 50px">Last Episode</th>
+      <th scope="col" style="width: 50px">New Episode</th>
       <th scope="col">Episode Link</th>
-      <th scope="col" style="width: 150px">Add Epsiode</th>
+      <th scope="col" style="width: 150px">Download</th>
       <th scope="col" style="width: 500px">Status</th>
     </tr>
   </thead>
