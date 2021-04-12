@@ -7,6 +7,7 @@ public func boot(_ app: Application) throws {
     
     
     
+    
     // Add WebSocket upgrade support to GET /echo
     wss.get("echo") { ws, req in
 
@@ -36,7 +37,11 @@ public func boot(_ app: Application) throws {
                 let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
                 guard let newEpisode = try? newEpi.save(on: req) else { return }
                 ws.send(text: "\(series_id),Done ✅")
-                sendNoti(req: req, to: "\(series_id)", title: "ekhtyar", body: "fds", badge: 1)
+                try Series.find(Int(series_id)!, on: req).map { ser in
+                    sendNoti(req: req, to: "\(ser?.title)", body: "تم إضافة حلقة جديدة من \(series_id)", badge: 1)
+                }
+                
+                
             }catch {
                 print(error)
                 ws.send(text: "\(series_id),⛔️ Error : \n \(error)")
@@ -44,6 +49,4 @@ public func boot(_ app: Application) throws {
             }
         }
     }
-    
-    
 }
