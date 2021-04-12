@@ -38,7 +38,7 @@ public func boot(_ app: Application) throws {
                 guard let newEpisode = try? newEpi.save(on: req) else { return }
                 ws.send(text: "\(series_id),Done ✅")
                 try Series.find(Int(series_id)!, on: req).map { ser in
-                    sendNoti(req: req, to: "\(series_id)", body: "تم إضافة حلقة جديدة من \(ser?.title)", badge: 1)
+                    sendNoti(req: req, to: "\(series_id)", body: "\(ser!.title) : تم إضافة حلقة جديدة. ", badge: 1)
                 }
                 
                 
