@@ -5,14 +5,18 @@ import ShellOut
 /// Called after your application has initialized.
 public func boot(_ app: Application) throws {
     
+    
+    
     // Add WebSocket upgrade support to GET /echo
     wss.get("echo") { ws, req in
+
         // Add a new on text callback
         ws.onText { ws, text in
             let split = text.split(separator: ",")
             if split.count != 3 { return }
             guard let series_id = split.first else { return }
             let episode_id = split[1]
+            print(series_id)
             guard let episode_link = split.last else { return }
             ws.send(text: "\(series_id),1/6 Downloading ... ")
             do {
@@ -32,6 +36,7 @@ public func boot(_ app: Application) throws {
                 let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
                 guard let newEpisode = try? newEpi.save(on: req) else { return }
                 ws.send(text: "\(series_id),Done ✅")
+                sendNoti(req: req, to: "\(series_id)", title: "ekhtyar", body: "fds", badge: 1)
             }catch {
                 print(error)
                 ws.send(text: "\(series_id),⛔️ Error : \n \(error)")

@@ -119,3 +119,26 @@ struct linkRequest : Content {
 struct mysqlresult : Content {
     var country_code : String
 }
+
+public func sendNoti(req : Request,to : String, title : String,body : String,badge : Int) {
+    var heads = HTTPHeaders()
+    heads.add(name: "content-type", value: "application/json")
+    heads.add(name: "authorization", value: "key=AAAAyY-mcpA:APA91bG-ffbFLVbWU4Bg4uyXQVlCCfu85scfbihI_oB3N72uorXLLCX6YztfwjcPzoBrAAMeMs1PqgZZh9aPAGqGE594nesENH1xlJziVPchNfBa5Tt4-fxCpmgg1TPU1px89PxDPDFa")
+    let a = try? req.client().post(URL(string: "https://fcm.googleapis.com/fcm/send")!, headers: heads, beforeSend: { req in
+        try req.content.encode(json: notificationBody(to: to, notification: notification(title: title, body: body, badge: badge)))
+    }).map { res in
+        print(res.description)
+    }
+}
+
+struct notificationBody : Content {
+    var to : String
+    var notification : notification
+}
+
+struct notification : Content {
+    var title : String
+    var body : String
+    var badge : Int
+ //   var sound : String
+}
