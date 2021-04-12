@@ -26,16 +26,27 @@ final class APIController : RouteCollection {
     func allAds( _ req : Request) -> Future<splashResponse> {
         return dispatch(request: req, handler: { _ -> splashResponse in
             let serieses = try Series.query(on: req).all().wait()
-            let categories = try Category.query(on: req).all().wait()
+            var categories = try Category.query(on: req).all().wait()
             guard let api = try ApiControl.find(1, on: req).wait() else { throw Abort(.notFound)}
             guard let ip = req.http.remotePeer.hostname else { throw Abort(.unauthorized) }
             guard let country_code = try req.withNewConnection(to: .mysql, closure: { conn -> EventLoopFuture<mysqlresult?> in
                 return conn.raw("SELECT `country_code` FROM `ip2location` WHERE INET_ATON('\(ip)') <= ip_to LIMIT 1").first(decoding: mysqlresult.self)
             }).wait()?.country_code else { throw Abort(.unauthorized)}
-            if country_whitelist.contains(country_code) {
-                api.api = true
-            }else {
-                api.api = false
+//            if country_whitelist.contains(country_code) {
+//                api.api = true
+//            }else {
+//                api.api = false
+//            }
+            switch country_code {
+            case "KW" :
+                categories[2].title += " 🇰🇼"
+                categories.rearrange(from: 2, to: 0)
+            case "EG" :
+                categories[0].title += " 🇪🇬"
+            case "SA" :
+                categories[1].title += " 🇸🇦"
+                categories.rearrange(from: 1, to: 0)
+            default : print("do nothing")
             }
             return splashResponse(serieses: serieses, categories: categories,apiControl: api)
         })
