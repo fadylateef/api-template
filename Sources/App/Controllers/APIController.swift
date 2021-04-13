@@ -22,7 +22,7 @@ final class APIController : RouteCollection {
         ios2.post("/ios2/episodes", use : episodes)
         ios2.post("/ios2/getLink", use: getLink)
         
-        router.get("/old/android/all", use: oldAll)
+        router.post("/old/android/all", use: oldAll)
         router.post("/old/android/episodes", use: oldEpisodes)
      //   router.post("/old/android/createLink", use: getli)
     }
