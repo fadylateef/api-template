@@ -98,9 +98,6 @@ final class APIController : RouteCollection {
         }
     }
     
-    func oldEpisodes( _ req : Request) -> Future<[Episode]> {
-        
-    }
 }
 
 final class splashResponse : Content {
