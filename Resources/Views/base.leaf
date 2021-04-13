@@ -10,14 +10,14 @@
       <th scope="col" style="width: 50px">ID</th>
       <th scope="col">Series Name</th>
       <th scope="col" style="width: 50px">New Episode</th>
-      <th scope="col">Episode Link</th>
+      <th scope="col" "width: 150px">Episode Link</th>
       <th scope="col" style="width: 150px">Download</th>
       <th scope="col" style="width: 500px">Status</th>
     </tr>
   </thead>
   <tbody>
         #for(result in results) {
-        <tr>
+        <tr id="#(result.id)">
       <th scope="row">#(result.id)</th>
       <td>#(result.name)</td>
       <td>#(result.last_episode)</td>
@@ -38,12 +38,13 @@
             let row_id = event
             ws.onmessage = function (event) {
                 var response = event.data.split(',')
-                var row = rows[response[0]];
+                var row = document.getElementById(response[0]);
                 var cell = row.cells[row.cells.length - 1];
                 cell.innerHTML = response[1];
             }
     function download(event) {
-            var row = rows[event];
+            let row = document.getElementById(`${event}`);
+            console.log(row);
             let series_id = row.cells[0].innerHTML;
             let episode_id = row.cells[2].innerHTML;
             let episode_link = row.cells[3].firstElementChild.value;
