@@ -21,6 +21,10 @@ final class APIController : RouteCollection {
         ios2.get("/ios2/splash", use: allIos2)
         ios2.post("/ios2/episodes", use : episodes)
         ios2.post("/ios2/getLink", use: getLink)
+        
+        router.post("/old/android/all", use: oldAll)
+        router.post("/old/android/episodes", use: episodes)
+      //  router.post("/old/android/createLink", use: getli)
     }
     
     func allAds( _ req : Request) -> Future<splashResponse> {
@@ -85,6 +89,18 @@ final class APIController : RouteCollection {
             return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
         })
     }
+    
+    func oldAll( _ req : Request) -> Future<[oldSeries]> {
+        return try Series.query(on: req).all().map { seri -> [oldSeries] in
+            return seri.map { ser in
+                return oldSeries(id: ser.id!, title: ser.title, poster: ser.poster, type: ser.type, trailer: ser.trailer, story: ser.story, actors: ser.actors, categoryID: ser.categoryID)
+            }
+        }
+    }
+    
+    func oldEpisodes( _ req : Request) -> Future<[Episode]> {
+        
+    }
 }
 
 final class splashResponse : Content {
@@ -142,4 +158,36 @@ struct notification : Content {
     var body : String
     var badge : Int
  //   var sound : String
+}
+
+struct oldSeries: Content {
+    /// The unique identifier for this `Todo`.
+    var id: Int?
+    var title: String
+    var poster : String
+    var type : String
+    var trailer : String
+    var story : String
+    var actors : String
+    var categoryID : Int
+
+    /// Creates a new `Todo`.
+    init(id: Int? = nil, title : String,poster : String,type : String,trailer : String,story : String,actors : String,categoryID : Int) {
+        self.id = id
+        self.title = title
+        self.poster = poster
+        self.type = type
+        self.trailer = trailer
+        self.story = story
+        self.actors = actors
+        self.categoryID = categoryID
+    }
+}
+
+struct oldSerRequest : Content {
+    var seriesID : Int
+}
+
+struct oldEpiRequest : Content {
+    var filename : String
 }
