@@ -23,7 +23,7 @@ final class APIController : RouteCollection {
         ios2.post("/ios2/getLink", use: getLink)
         
         router.post("/old/android/all", use: oldAll)
-        router.post("/old/android/episodes", use: episodes)
+        router.post("/old/android/episodes", use: oldEpisodes)
       //  router.post("/old/android/createLink", use: getli)
     }
     
@@ -96,6 +96,15 @@ final class APIController : RouteCollection {
                 return oldSeries(id: ser.id!, title: ser.title, poster: ser.poster, type: ser.type, trailer: ser.trailer, story: ser.story, actors: ser.actors, categoryID: ser.categoryID)
             }
         }
+    }
+    
+    func oldEpisodes( _ req : Request) -> Future<[Episode]> {
+        print(req)
+        return dispatch(request: req, handler: { _ -> [Episode] in
+            let id = try req.content.decode(oldSerRequest.self).wait().seriesID
+            let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait().convertToPublich()
+            return episodes
+        })
     }
     
 }
