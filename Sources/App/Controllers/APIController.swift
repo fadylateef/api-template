@@ -24,7 +24,7 @@ final class APIController : RouteCollection {
         
         router.post("/old/android/all", use: oldAll)
         router.post("/old/android/episodes", use: oldEpisodes)
-     //   router.post("/old/android/createLink", use: getli)
+        router.post("/old/android/createLink", use: oldLink)
     }
     
     func allAds( _ req : Request) -> Future<splashResponse> {
@@ -107,13 +107,13 @@ final class APIController : RouteCollection {
         })
     }
     
-//    func oldLink( _ req : Request) -> Future<String> {
-//        return dispatch(request: req, handler: { _ -> String in
-//            let filenames = try req.content.decode(oldEpiRequest.self).wait()
-//            guard let epi = try Episode.query(on: req).filter(\.filename == filenames). else { throw Abort(.notFound) }
-//            return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
-//        })
-//    }
+    func oldLink( _ req : Request) -> Future<String> {
+        return dispatch(request: req, handler: { _ -> String in
+            let filenames = try req.content.decode(oldEpiRequest.self).wait().filename
+            guard let epi = try Episode.query(on: req).filter(\.filename == filenames).all().wait().first else { throw Abort(.notFound) }
+            return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
+        })
+    }
     
 }
 
