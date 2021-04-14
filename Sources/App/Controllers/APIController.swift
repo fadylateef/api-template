@@ -36,11 +36,11 @@ final class APIController : RouteCollection {
             guard let country_code = try req.withNewConnection(to: .mysql, closure: { conn -> EventLoopFuture<mysqlresult?> in
                 return conn.raw("SELECT `country_code` FROM `ip2location` WHERE INET_ATON('\(ip)') <= ip_to LIMIT 1").first(decoding: mysqlresult.self)
             }).wait()?.country_code else { throw Abort(.unauthorized)}
-//            if country_whitelist.contains(country_code) {
-//                api.api = true
-//            }else {
-//                api.api = false
-//            }
+            if country_whitelist.contains(country_code) {
+                api.api = true
+            }else {
+                api.api = false
+            }
             switch country_code {
             case "KW" :
                 categories[2].title += " 🇰🇼"
@@ -74,7 +74,6 @@ final class APIController : RouteCollection {
     }
     
     func episodes( _ req : Request) -> Future<[Episode]> {
-        print(req)
         return dispatch(request: req, handler: { _ -> [Episode] in
             let id = try req.content.decode(episodesRequest.self).wait().series_id
             let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait().convertToPublich()
@@ -99,7 +98,6 @@ final class APIController : RouteCollection {
     }
     
     func oldEpisodes( _ req : Request) -> Future<[Episode]> {
-        print(req)
         return dispatch(request: req, handler: { _ -> [Episode] in
             let id = try req.content.decode(oldSerRequest.self).wait().seriesID
             let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait().convertToPublich()
@@ -158,7 +156,7 @@ public func sendNoti(req : Request,to : String,body : String,badge : Int) {
     let a = try? req.client().post(URL(string: "https://fcm.googleapis.com/fcm/send")!, headers: heads, beforeSend: { req in
         try req.content.encode(json: notificationBody(to: "/topics/\(to)", notification: notification(body: body,badge: badge)))
     }).map { res in
-        print(res.description)
+      //  print(res.description)
     }
 }
 
