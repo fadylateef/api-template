@@ -36,9 +36,6 @@ final class APIController : RouteCollection {
             guard let country_code = try req.withNewConnection(to: .mysql, closure: { conn -> EventLoopFuture<mysqlresult?> in
                 return conn.raw("SELECT `country_code` FROM `ip2location` WHERE INET_ATON('\(ip)') <= ip_to LIMIT 1").first(decoding: mysqlresult.self)
             }).wait()?.country_code else { throw Abort(.unauthorized)}
-            if country_code == "US" {
-                api.api = false
-            }
             switch country_code {
             case "KW" :
                 categories[2].title += " 🇰🇼"
