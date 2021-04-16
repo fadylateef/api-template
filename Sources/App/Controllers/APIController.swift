@@ -29,8 +29,8 @@ final class APIController : RouteCollection {
     
     func allAds( _ req : Request) -> Future<splashResponse> {
         return dispatch(request: req, handler: { _ -> splashResponse in
-            let serieses = try Series.query(on: req).all().wait()
-            var categories = try Category.query(on: req).all().wait()
+            let serieses = global_series
+            var categories = global_categories
             guard let api = try ApiControl.find(1, on: req).wait() else { throw Abort(.notFound)}
             guard let ip = req.http.remotePeer.hostname else { throw Abort(.unauthorized) }
             guard let country_code = try req.withNewConnection(to: .mysql, closure: { conn -> EventLoopFuture<mysqlresult?> in
@@ -53,16 +53,16 @@ final class APIController : RouteCollection {
     
     func allDroid( _ req : Request) -> Future<droidResponse> {
         return dispatch(request: req, handler: { _ -> droidResponse in
-            let serieses = try Series.query(on: req).all().wait()
-            let categories = try Category.query(on: req).all().wait()
+            let serieses = global_series
+            var categories = global_categories
             return droidResponse(serieses: serieses, categories: categories)
         })
     }
     
     func allIos2( _ req : Request) -> Future<splashResponse> {
         return dispatch(request: req, handler: { _ -> splashResponse in
-            let serieses = try Series.query(on: req).all().wait()
-            let categories = try Category.query(on: req).all().wait()
+            let serieses = global_series
+            var categories = global_categories
             guard let api = try ApiControl.find(2, on: req).wait() else { throw Abort(.notFound)}
             return splashResponse(serieses: serieses, categories: categories,apiControl: api)
         })

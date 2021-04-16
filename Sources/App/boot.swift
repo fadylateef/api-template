@@ -3,11 +3,22 @@ import FluentMySQL
 import ShellOut
 import SwiftSoup
 
+var global_series : [Series] = []
+var global_categories : [Category] = []
+
 /// Called after your application has initialized.
 public func boot(_ app: Application) throws {
     
     
     // Add WebSocket upgrade support to GET /echo
+    
+    let request = Request(using: app)
+    try? Series.query(on: request).all().map {ser in
+        global_series = ser
+    }
+    try? Category.query(on: request).all().map {cats in
+        global_categories = cats
+    }
     
     wss.get("echo") { ws, req in
 
