@@ -45,7 +45,7 @@ final class APIController : RouteCollection {
             case "SA" :
                 categories[1].title += " 🇸🇦"
                 categories.rearrange(from: 1, to: 0)
-            default : print("do nothing")
+            default : break
             }
             return splashResponse(serieses: serieses, categories: categories,apiControl: api)
         })
