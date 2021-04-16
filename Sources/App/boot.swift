@@ -10,14 +10,7 @@ public func boot(_ app: Application) throws {
     // Add WebSocket upgrade support to GET /echo
     
     wss.get("echo") { ws, req in
-        var headers = HTTPHeaders()
-        headers.add(name: "Referer", value: "https://en.cimanow.cc/")
-        headers.add(name: "Host", value: "watch14.cimanow.net")
-        let frame = try? req.client().get(URL(string: "https://en.cimanow.cc/%d9%85%d8%b3%d9%84%d8%b3%d9%84-%d8%ae%d9%84%d9%8a-%d8%a8%d8%a7%d9%84%d9%83-%d9%85%d9%86-%d8%b2%d9%8a%d8%b2%d9%8a-%d8%a7%d9%84%d8%ad%d9%84%d9%82%d8%a9-1-%d8%a7%d9%84%d8%a7%d9%88%d9%84%d9%8a/watching/")!,headers: headers).map { res in
-            print(res.http.body)
-        }
-        
-        
+
         // Add a new on text callback
         ws.onText { ws, text in
             let split = text.split(separator: ",")
