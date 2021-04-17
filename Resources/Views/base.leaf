@@ -34,20 +34,24 @@
 </table>
 <script>
             var rows = document.getElementsByTagName("table")[0].rows;
-    function download(event) {
             ws = new WebSocket("wss://drmdn.app/echo");
+            ws.onopen = function (evt) {
+                console.log("WS Connected")
+            }
+    function download(event) {
+     //       ws = new WebSocket("wss://drmdn.app/echo");
             let row = document.getElementById(`${event}`);
-            console.log(row);
             let series_id = row.cells[0].innerHTML;
             let episode_id = row.cells[2].innerHTML;
             let episode_link = row.cells[3].firstElementChild.value;
             let btn = row.cells[4].firstElementChild;
             btn.setAttribute("disabled","");
             btn.innerHTML = "Loading ..";
-            ws.onopen = function (evt) {
-                console.log("WS Connected")
-                ws.send(`${series_id},${episode_id},${episode_link}`);
-            }
+      //      ws.onopen = function (evt) {
+      //          console.log("WS Connected")
+         //       ws.send(`${series_id},${episode_id},${episode_link}`);
+       //     }
+            ws.send(`${series_id},${episode_id},${episode_link}`);
            
             ws.onmessage = function (res) {
                 var response = res.data.split(',')
