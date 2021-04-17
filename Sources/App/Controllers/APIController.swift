@@ -85,13 +85,14 @@ final class APIController : RouteCollection {
         return dispatch(request: req, handler: { _ -> String in
             let episode_id = try req.content.decode(linkRequest.self).wait().episode_id
             guard let epi = try Episode.find(episode_id, on: req).wait() else { throw Abort(.notFound) }
-            if self.served {
-                self.served = !self.served
-                return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
-            }else {
-                self.served = !self.served
-                return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)"
-            }
+//            if self.served {
+//                self.served = !self.served
+//                return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
+//            }else {
+//                self.served = !self.served
+//                return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)"
+//            }
+            return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)"
             
         })
     }
