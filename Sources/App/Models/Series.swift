@@ -12,8 +12,9 @@ final class Series: MySQLModel {
     var story : String
     var actors : String
     var categoryID : Int
+    var ord : Int
 
-    init(id: Int? = nil, title : String,poster : String,type : String,trailer : String,story : String,actors : String,categoryID : Int) {
+    init(id: Int? = nil, title : String,poster : String,type : String,trailer : String,story : String,actors : String,categoryID : Int,ord : Int) {
         self.id = id
         self.title = title
         self.poster = poster
@@ -22,6 +23,7 @@ final class Series: MySQLModel {
         self.story = story
         self.actors = actors
         self.categoryID = categoryID
+        self.ord = ord
     }
 }
 
