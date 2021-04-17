@@ -9,6 +9,8 @@ final class APIController : RouteCollection {
     var servers = ["https://drmdn.app","http://185.101.107.142/"]
     var served = true
     
+    var serv = 1
+    
     
     /// Returns a list of all `Todo`s.
     func boot(router: Router) throws {
@@ -77,7 +79,7 @@ final class APIController : RouteCollection {
         return dispatch(request: req, handler: { _ -> [Episode] in
             let id = try req.content.decode(episodesRequest.self).wait().series_id
             let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait().convertToPublich()
-            return []
+            return episodes
         })
     }
     
@@ -92,7 +94,18 @@ final class APIController : RouteCollection {
 //                self.served = !self.served
 //                return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)"
 //            }
-            return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)"
+            if self.serv == 1 {
+                self.serv = 2
+                return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
+            }else if self.serv == 2 {
+                self.serv = 3
+                return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)"
+            }else {
+                self.serv = 1
+                return "http://89.41.180.90/videos/\(epi.seriesID)/\(epi.filename!)"
+            }
+            
+
             
         })
     }
