@@ -77,7 +77,7 @@ final class APIController : RouteCollection {
         return dispatch(request: req, handler: { _ -> [Episode] in
             let id = try req.content.decode(episodesRequest.self).wait().series_id
             let episodes = try Episode.query(on: req).filter(\.seriesID == id).sort(\.order , .ascending).all().wait().convertToPublich()
-            return episodes
+            return []
         })
     }
     
