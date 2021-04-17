@@ -13,7 +13,7 @@ public func boot(_ app: Application) throws {
     // Add WebSocket upgrade support to GET /echo
     
     let request = Request(using: app)
-    try? Series.query(on: request).all().map {ser in
+    try? Series.query(on: request).sort(\.ord , .ascending).all().map {ser in
         global_series = ser
     }
     try? Category.query(on: request).all().map {cats in
