@@ -38,7 +38,7 @@ public func boot(_ app: Application) throws {
                     let hlsName = "\(series_id)_\(episode_id).m3u8"
                     if episode_link.contains("ok.ru") {
                         try shellOut(to: "youtube-dl -f mpd-3 \(episode_link) -o /videos/\(series_id)/\(videoName)")
-                    }else if episode_link.contains("amzn-cdn.net") {
+                    }else if episode_link.contains(".mp4") {
                         try shellOut(to: "wget \(episode_link) /videos/\(series_id)/\(videoName)")
                     }else {
                         ws.send(text: "\(series_id),Video link not correct")
