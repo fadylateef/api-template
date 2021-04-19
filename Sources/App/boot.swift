@@ -56,9 +56,9 @@ public func boot(_ app: Application) throws {
                     let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
                     guard let newEpisode = try? newEpi.save(on: req) else { return }
                     ws.send(text: "\(series_id),6/10 Send Video to LB1")
-                    try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@185.101.107.142:/videos/\(series_id)/\(videoName)")
+                    try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@185.101.107.142:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),7/10 LB1 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@185.101.107.142 \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm /videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "sshpass -p'fady123' ssh root@185.101.107.142 \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm /ssd/videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),8/10 Send Video to LB2")
                     try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@89.41.180.90:/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),9/10 LB2 TS Conversion ...")

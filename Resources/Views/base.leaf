@@ -12,6 +12,7 @@
       <th scope="col" style="width: 50px">New Episode</th>
       <th scope="col" "width: 150px">Episode Link</th>
       <th scope="col" style="width: 150px">Download</th>
+      <th scope="col" style="width: 150px">Delete</th>
       <th scope="col" style="width: 500px">Status</th>
     </tr>
   </thead>
@@ -27,6 +28,9 @@
         <td>
             <button type="button" class="btn btn-primary" onclick="download(#(result.id))">Download</button>
         </td>
+        <td>
+            <button type="button" class="btn btn-danger" onclick="download(#(result.id))">Download</button>
+        </td>
         <td></td>
     </tr>
     }
@@ -37,6 +41,9 @@
             ws = new WebSocket("wss://drmdn.app/echo");
             ws.onopen = function (evt) {
                 console.log("WS Connected")
+            }
+            ws.onclose = function (evt) {
+                console.log("WS Disconnected")
             }
     function download(event) {
      //       ws = new WebSocket("wss://drmdn.app/echo");
