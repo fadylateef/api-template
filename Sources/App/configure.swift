@@ -26,7 +26,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     // Configure a SQLite database
     var databases = DatabasesConfig()
-    let databaseConfig = MySQLDatabaseConfig(hostname: "localhost", username: "root", password: "fady", database: "drmdnapi")
+    let databaseConfig = MySQLDatabaseConfig(hostname: "localhost", username: "root", password: "fady", database: "drmdnapi2")
     let database = MySQLDatabase(config: databaseConfig)
     databases.add(database: database, as: .mysql)
     services.register(databases)
