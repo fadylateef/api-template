@@ -12,8 +12,8 @@ public func boot(_ app: Application) throws {
     
     // Add WebSocket upgrade support to GET /echo
     let request = Request(using: app)
-    
-    var epis = epi_list.split(separator: ",")
+//
+//    var epis = epi_list.split(separator: ",")
 //    for epi in epis {
 //        print(epi)
 //        var epi1 = epi.replacingOccurrences(of: ".m3u8", with: "").split(separator: "_")
@@ -22,23 +22,23 @@ public func boot(_ app: Application) throws {
 //
 //    }
     
-    var durations = duration_list.split(separator: ",")
-    
-    for dur in durations {
-        let dura = dur.split(separator: "-").first!
-        print(dura)
-        let len = Int("\(dura)")! / 60000
-        let fl = dur.split(separator: "-").last
-        let flname = fl!.split(separator: "/").last!
-        try? Episode.query(on: request).filter(\.filename == "\(flname)").all().map { ep in
-            print(ep)
-            if !ep.isEmpty {
-                var nw = ep.first!
-                nw.duration = len
-                try? nw.save(on: request)
-            }
-        }
-    }
+//    var durations = duration_list.split(separator: ",")
+//
+//    for dur in durations {
+//        let dura = dur.split(separator: "-").first!
+//        print(dura)
+//        let len = Int("\(dura)")! / 60000
+//        let fl = dur.split(separator: "-").last
+//        let flname = fl!.split(separator: "/").last!
+//        try? Episode.query(on: request).filter(\.filename == "\(flname)").all().map { ep in
+//            print(ep)
+//            if !ep.isEmpty {
+//                var nw = ep.first!
+//                nw.duration = len
+//                try? nw.save(on: request)
+//            }
+//        }
+//    }
     
 //    do {
 //        let episode_length = try shellOut(to: "sshpass -p'fady123' ssh root@185.101.107.142 \"mediainfo --Inform=\\\"General;%Duration%\\\" /ssd/videos/1/1_1.m3u8\"")
