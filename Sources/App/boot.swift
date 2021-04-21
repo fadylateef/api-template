@@ -74,7 +74,11 @@ public func boot(_ app: Application) throws {
                     let videoName = "\(series_id)_\(episode_id).mp4"
                     let imageName = "\(series_id)_\(episode_id).jpg"
                     let hlsName = "\(series_id)_\(episode_id).m3u8"
-                    try shellOut(to: "youtube-dl -f mpd-3 \(episode_link) -o /videos/\(series_id)/\(videoName)")
+                    if episode_link.contains("ok.ru") {
+                        try shellOut(to: "youtube-dl -f mpd-3 \(episode_link) -o /videos/\(series_id)/\(videoName)")
+                    }else if episode_link.contains(".mp4") {
+                        try shellOut(to: "wget \(episode_link) /videos/\(series_id)/\(videoName)")
+                    }
                     ws.send(text: "\(series_id),2/12 Duration ...")
                     let episode_length = try shellOut(to: "mediainfo --Inform=\"General;%Duration%\" /videos/\(series_id)/\(videoName)")
                     guard let epi_length = Int(episode_length) else { return }
