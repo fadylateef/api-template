@@ -77,7 +77,7 @@ public func boot(_ app: Application) throws {
                     if episode_link.contains("ok.ru") {
                         try shellOut(to: "youtube-dl -f mpd-3 \(episode_link) -o /videos/\(series_id)/\(videoName)")
                     }else if episode_link.contains(".mp4") {
-                        try shellOut(to: "wget \(episode_link) /videos/\(series_id)/\(videoName)")
+                        try shellOut(to: "curl -o /videos/\(series_id)/\(videoName) \(episode_link) ")
                     }
                     ws.send(text: "\(series_id),2/12 Duration ...")
                     let episode_length = try shellOut(to: "mediainfo --Inform=\"General;%Duration%\" /videos/\(series_id)/\(videoName)")
