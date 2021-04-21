@@ -96,7 +96,7 @@ final class APIController : RouteCollection {
 //            }
             if self.serv == 1 {
                 self.serv = 2
-                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
+                return "https://x.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
             }else if self.serv == 2 {
                 self.serv = 3
                 return "https://f.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
