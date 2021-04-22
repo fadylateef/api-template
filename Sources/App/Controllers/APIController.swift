@@ -130,7 +130,7 @@ final class APIController : RouteCollection {
         return dispatch(request: req, handler: { _ -> String in
             let filenames = try req.content.decode(oldEpiRequest.self).wait().filename
             guard let epi = try Episode.query(on: req).filter(\.filename == filenames).all().wait().first else { throw Abort(.notFound) }
-            return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
+            return "https://drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?id=\(epi.seriesID)"
         })
     }
     
