@@ -2,6 +2,7 @@ import Vapor
 import FluentMySQL
 import ShellOut
 import SwiftSoup
+import Crypto
 
 var global_series : [Series] = []
 var global_categories : [Category] = []
@@ -9,6 +10,12 @@ var global_categories : [Category] = []
 /// Called after your application has initialized.
 public func boot(_ app: Application) throws {
     
+    do {
+        let tm = Date().addingTimeInterval(7200).unixNow()
+        let md = try? shellOut(to: "echo -n '\(tm)37.39.233.114 9865' | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =")
+    }catch {
+        print(error)
+    }
     
     // Add WebSocket upgrade support to GET /echo
     let request = Request(using: app)

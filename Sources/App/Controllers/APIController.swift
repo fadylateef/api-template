@@ -1,5 +1,6 @@
 import Vapor
 import FluentMySQL
+import ShellOut
 
 var country_whitelist = ["SA","KW","AE","EG","OM","BH","IQ","LY","QA"]
 
@@ -87,23 +88,26 @@ final class APIController : RouteCollection {
         return dispatch(request: req, handler: { _ -> String in
             let episode_id = try req.content.decode(linkRequest.self).wait().episode_id
             guard let epi = try Episode.find(episode_id, on: req).wait() else { throw Abort(.notFound) }
-            if self.served {
-                self.served = !self.served
-                return "https://f.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
-            }else {
-                self.served = !self.served
-                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
-            }
-//            if self.serv == 1 {
-//                self.serv = 2
-//                return "https://x.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
-//            }else if self.serv == 2 {
-//                self.serv = 3
-//                return "https://f.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?id=3"
+            let tm = Date().addingTimeInterval(7200).unixNow()
+            guard let ip = req.http.remotePeer.hostname else { throw Abort(.unauthorized) }
+            guard let md = try? shellOut(to: "echo -n '\(tm)\(ip) 9865' | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =") else { throw Abort(.unauthorized) }
+//            if self.served {
+//                self.served = !self.served
+//                return "https://f.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
 //            }else {
-//                self.serv = 1
-//                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)"
+//                self.served = !self.served
+//                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
 //            }
+            if self.serv == 1 {
+                self.serv = 2
+                return "https://x.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+            }else if self.serv == 2 {
+                self.serv = 3
+                return "https://f.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+            }else {
+                self.serv = 1
+                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+            }
             
 
             
