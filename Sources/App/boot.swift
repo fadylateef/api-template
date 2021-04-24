@@ -94,9 +94,6 @@ public func boot(_ app: Application) throws {
                     try shellOut(to: "ffmpeg -ss 00:05:00 -i /videos/\(series_id)/\(videoName) -vframes 1 -q:v 20 /images/\(imageName)")
 //                    ws.send(text: "\(series_id),4/10 TS Conversion ...")
 //                    try shellOut(to: "ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName)")
-                    ws.send(text: "\(series_id),5/12 Saving to DB ...")
-                    let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
-                    guard let newEpisode = try? newEpi.save(on: req) else { return }
                     ws.send(text: "\(series_id),6/12 Send Video to LB1")
                     try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@f.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),7/12 LB1 TS Conversion ...")
@@ -111,6 +108,9 @@ public func boot(_ app: Application) throws {
                     try shellOut(to: "sshpass -p'fady123' ssh root@x.drmdn.app \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm /videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),12/12 Delete from DO")
                     try shellOut(to: "rm -rf /videos/\(series_id)/\(videoName)")
+                    ws.send(text: "\(series_id),5 Saving to DB ...")
+                    let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
+                    guard let newEpisode = try? newEpi.save(on: req) else { return }
                     ws.send(text: "\(series_id),Done ✅")
                     try Series.find(Int(series_id)!, on: req).map { ser in
                         sendNoti(req: req, to: "\(series_id)", body: "\(ser!.title) : تم إضافة حلقة جديدة. ", badge: 1)
