@@ -85,10 +85,10 @@ public func boot(_ app: Application) throws {
                     let hlsName = "\(series_id)_\(episode_id)_.m3u8"
                     let old_episode = try? Episode.query(on: req).filter(\.seriesID == Int(series_id)!).filter(\.order == Int(episode_id)!).all().wait()
                     if old_episode != nil && old_episode!.isEmpty {
-                        ws.send(text: "\(series_id),New Episode")
+                  //      ws.send(text: "\(series_id),New Episode")
                     }else {
                         noti = false
-                        ws.send(text: "\(series_id),Old Episode")
+                    //    ws.send(text: "\(series_id),Old Episode")
                         try shellOut(to: "rm /images/\(imageName) 2>/dev/null")
                         try? old_episode?.first!.delete(on: req).wait()
                     }
