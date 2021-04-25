@@ -18,7 +18,7 @@ final class WebController : RouteCollection {
     func cpanel( _ req : Request) -> Future<View> {
         return dispatch(request: req, handler: { req -> View in
             let serieses = try Series.query(on: req).all().wait()
-            let episodes = try Episode.query(on: req).all().wait()
+            let episodes = try Episode.query(on: req).sort(\.order , .ascending).all().wait()
             var results : [seriesWeb] = []
             for serie in serieses {
                 if let epi_id = episodes.last(where: { $0.seriesID == serie.id })?.order {
