@@ -67,6 +67,7 @@ public func boot(_ app: Application) throws {
     
     wss.get("echo") { ws, req in
 
+        var noti = true
         // Add a new on text callback
         ws.onText { ws, text in
             let split = text.split(separator: ",")
@@ -86,6 +87,7 @@ public func boot(_ app: Application) throws {
                     if old_episode != nil && old_episode!.isEmpty {
                         ws.send(text: "\(series_id),New Episode")
                     }else {
+                        noti = false
                         ws.send(text: "\(series_id),Old Episode")
                         try shellOut(to: "rm /images/\(imageName) 2>/dev/null")
                         try? old_episode?.first!.delete(on: req).wait()
@@ -123,7 +125,9 @@ public func boot(_ app: Application) throws {
                     guard let newEpisode = try? newEpi.save(on: req) else { return }
                     ws.send(text: "\(series_id),Done ✅")
                     try Series.find(Int(series_id)!, on: req).map { ser in
-                        sendNoti(req: req, to: "\(series_id)", body: "\(ser!.title) : تم إضافة حلقة جديدة. ", badge: 1)
+                        if noti {
+                            sendNoti(req: req, to: "\(series_id)", body: "\(ser!.title) : تم إضافة حلقة جديدة. ", badge: 1)
+                        }
                     }
                     
                 }catch {
