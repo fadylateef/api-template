@@ -78,9 +78,19 @@ public func boot(_ app: Application) throws {
             ws.send(text: "\(series_id),1/10 Downloading ... ")
             DispatchQueue.global().async {
                 do {
+                    ws.send(text: "\(series_id),HI")
                     let videoName = "\(series_id)_\(episode_id).mp4"
                     let imageName = "\(series_id)_\(episode_id).jpg"
-                    let hlsName = "\(series_id)_\(episode_id).m3u8"
+                    let hlsName = "\(series_id)_\(episode_id)_.m3u8"
+                    let old_episode = try? Episode.query(on: req).filter(\.seriesID == Int(series_id)!).filter(\.order == Int(episode_id)!).all().wait()
+                    if old_episode != nil && old_episode!.isEmpty {
+                        ws.send(text: "\(series_id),New Episode")
+                    }else {
+                        ws.send(text: "\(series_id),Old Episode")
+                        try shellOut(to: "rm /images/\(imageName) 2>/dev/null")
+                        try? old_episode?.first!.delete(on: req).wait()
+                    }
+                    
                     if episode_link.contains("ok.ru") {
                         try shellOut(to: "youtube-dl -f mpd-3 \(episode_link) -o /videos/\(series_id)/\(videoName)")
                     }else if episode_link.contains(".mp4") {
@@ -91,7 +101,7 @@ public func boot(_ app: Application) throws {
                     guard let epi_length = Int(episode_length) else { return }
                     let episode_duration = epi_length / 60000
                     ws.send(text: "\(series_id),3/12 TS Screenshot ...")
-                    try shellOut(to: "ffmpeg -ss 00:05:00 -i /videos/\(series_id)/\(videoName) -vframes 1 -q:v 20 /images/\(imageName)")
+                    try shellOut(to: "ffmpeg -ss 00:05:00 -i /videos/\(series_id)/\(videoName) -vframes 1 -q:v 20 /images/\(imageName) 2>/dev/null")
 //                    ws.send(text: "\(series_id),4/10 TS Conversion ...")
 //                    try shellOut(to: "ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName)")
                     ws.send(text: "\(series_id),6/12 Send Video to LB1")
