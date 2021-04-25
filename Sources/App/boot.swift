@@ -79,7 +79,6 @@ public func boot(_ app: Application) throws {
             ws.send(text: "\(series_id),1/10 Downloading ... ")
             DispatchQueue.global().async {
                 do {
-                    ws.send(text: "\(series_id),HI")
                     let videoName = "\(series_id)_\(episode_id).mp4"
                     let imageName = "\(series_id)_\(episode_id).jpg"
                     let hlsName = "\(series_id)_\(episode_id)_.m3u8"
