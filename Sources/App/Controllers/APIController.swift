@@ -100,13 +100,13 @@ final class APIController : RouteCollection {
 //            }
             if self.serv == 1 {
                 self.serv = 2
-                return "https://x.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+                return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
             }else if self.serv == 2 {
                 self.serv = 3
-                return "https://f.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+                return "http://89.41.180.90/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
             }else {
                 self.serv = 1
-                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+                return "http://209.159.155.114/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
             }
             
 
