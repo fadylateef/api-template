@@ -20,10 +20,10 @@ final class APIController : RouteCollection {
         prot.post("/ios/episodes", use: episodes)
         prot.post("/ios/getLink", use: getLink)
         
-//        let droid = router.grouped(APIAccessMiddleware2.self)
-//        droid.get("/android/all", use: allDroid)
-//        droid.post("/android/episodes", use : episodes)
-//        droid.post("/android/getLink", use: getLink)
+        let droid = router.grouped(APIAccessMiddleware2.self)
+        droid.get("/android/all", use: allDroid)
+        droid.post("/android/episodes", use : episodes)
+        droid.post("/android/getLink", use: getLink)
 //        
 //        let ios2 = router.grouped(APIAccessMiddleware.self)
 //        ios2.get("/ios2/splash", use: allIos2)

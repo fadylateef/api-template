@@ -91,7 +91,6 @@ public func boot(_ app: Application) throws {
                         try shellOut(to: "rm /images/\(imageName) 2>/dev/null")
                         try? old_episode?.first!.delete(on: req).wait()
                     }
-                    
                     if episode_link.contains("ok.ru") {
                         try shellOut(to: "youtube-dl -f mpd-3 \(episode_link) -o /videos/\(series_id)/\(videoName)")
                     }else if episode_link.contains(".mp4") {
