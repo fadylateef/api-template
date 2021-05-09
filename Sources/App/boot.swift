@@ -95,6 +95,8 @@ public func boot(_ app: Application) throws {
                         try shellOut(to: "youtube-dl -f mpd-3 \(episode_link) -o /videos/\(series_id)/\(videoName)")
                     }else if episode_link.contains(".mp4") {
                         try shellOut(to: "curl -o /videos/\(series_id)/\(videoName) \(episode_link) -k")
+                    }else if episode_link.contains(".m3u8") {
+                        try shellOut(to: "youtube-dl \(episode_link) -o /videos/\(series_id)/\(videoName)")
                     }
                     ws.send(text: "\(series_id),2/12 Duration ...")
                     let episode_length = try shellOut(to: "mediainfo --Inform=\"General;%Duration%\" /videos/\(series_id)/\(videoName)")
