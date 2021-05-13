@@ -109,7 +109,7 @@ public func boot(_ app: Application) throws {
                     ws.send(text: "\(series_id),6/12 Send Video to LB1")
                     try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@f.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),7/12 LB1 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@f.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm -f /ssd/videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "sshpass -p'fady123' ssh root@f.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName)\"")
                     ws.send(text: "\(series_id),Finished ts conversion then delete")
                     try shellOut(to: "sshpass -p'fady123' ssh root@f.drmdn.app \"rm -f /ssd/videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),8/12 Send Video to LB2")
