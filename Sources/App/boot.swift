@@ -48,7 +48,7 @@ public func boot(_ app: Application) throws {
 //    }
     
 //    do {
-//        let episode_length = try shellOut(to: "sshpass -p'fady123' ssh root@185.101.107.142 \"mediainfo --Inform=\\\"General;%Duration%\\\" /ssd/videos/1/1_1.m3u8\"")
+//        let episode_length = try shellOut(to: "ssh root@185.101.107.142 \"mediainfo --Inform=\\\"General;%Duration%\\\" /ssd/videos/1/1_1.m3u8\"")
 //        guard let epi_length = Int(episode_length) else { return }
 //        let episode_duration = epi_length / 60000
 //        print(episode_duration)
@@ -104,22 +104,18 @@ public func boot(_ app: Application) throws {
                     let episode_duration = epi_length / 60000
                     ws.send(text: "\(series_id),3/12 TS Screenshot ...")
                     try shellOut(to: "ffmpeg -ss 00:05:00 -i /videos/\(series_id)/\(videoName) -vframes 1 -q:v 20 /images/\(imageName) 2>/dev/null")
-//                    ws.send(text: "\(series_id),4/10 TS Conversion ...")
-//                    try shellOut(to: "ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName)")
                     ws.send(text: "\(series_id),6/12 Send Video to LB1")
-                    try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@f.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
+                    try shellOut(to: "scp /videos/\(series_id)/\(videoName) root@f.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),7/12 LB1 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@f.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName)\"")
-                    ws.send(text: "\(series_id),Finished ts conversion then delete")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@f.drmdn.app \"rm -f /ssd/videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "ssh root@f.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm -f /ssd/videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),8/12 Send Video to LB2")
-                    try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@t.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
+                    try shellOut(to: "scp /videos/\(series_id)/\(videoName) root@t.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),9/12 LB2 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@t.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm -f /ssd/videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "ssh root@t.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm -f /ssd/videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),10/12 Send Video to LB3")
-                    try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@x.drmdn.app:/videos/\(series_id)/\(videoName)")
+                    try shellOut(to: "scp /videos/\(series_id)/\(videoName) root@x.drmdn.app:/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),11/12 LB2 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@x.drmdn.app \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm -f /videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "ssh root@x.drmdn.app \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm -f /videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),12/12 Delete from DO")
                     try shellOut(to: "rm -rf /videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),5 Saving to DB ...")
