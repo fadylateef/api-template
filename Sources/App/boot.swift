@@ -88,7 +88,7 @@ public func boot(_ app: Application) throws {
                     }else {
                         noti = false
                     //    ws.send(text: "\(series_id),Old Episode")
-                        try shellOut(to: "rm /images/\(imageName) 2>/dev/null")
+                        try shellOut(to: "rm -f /images/\(imageName) 2>/dev/null")
                         try? old_episode?.first!.delete(on: req).wait()
                     }
                     if episode_link.contains("ok.ru") {
@@ -109,15 +109,15 @@ public func boot(_ app: Application) throws {
                     ws.send(text: "\(series_id),6/12 Send Video to LB1")
                     try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@f.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),7/12 LB1 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@f.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm /ssd/videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "sshpass -p'fady123' ssh root@f.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm -f /ssd/videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),8/12 Send Video to LB2")
                     try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@t.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),9/12 LB2 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@t.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm /ssd/videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "sshpass -p'fady123' ssh root@t.drmdn.app \"ffmpeg -i /ssd/videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm -f /ssd/videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),10/12 Send Video to LB3")
                     try shellOut(to: "sshpass -p'fady123' scp /videos/\(series_id)/\(videoName) root@x.drmdn.app:/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),11/12 LB2 TS Conversion ...")
-                    try shellOut(to: "sshpass -p'fady123' ssh root@x.drmdn.app \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm /videos/\(series_id)/\(videoName)\"")
+                    try shellOut(to: "sshpass -p'fady123' ssh root@x.drmdn.app \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm -f /videos/\(series_id)/\(videoName)\"")
                     ws.send(text: "\(series_id),12/12 Delete from DO")
                     try shellOut(to: "rm -rf /videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),5 Saving to DB ...")
