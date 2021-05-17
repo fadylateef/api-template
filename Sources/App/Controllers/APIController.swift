@@ -91,23 +91,23 @@ final class APIController : RouteCollection {
             let tm = Date().addingTimeInterval(7200).unixNow()
             guard let ip = req.http.remotePeer.hostname else { throw Abort(.unauthorized) }
             guard let md = try? shellOut(to: "echo -n '\(tm)\(ip) 9865' | openssl md5 -binary | openssl base64 | tr +/ -_ | tr -d =") else { throw Abort(.unauthorized) }
-//            if self.served {
-//                self.served = !self.served
-//                return "https://f.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
-//            }else {
-//                self.served = !self.served
-//                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
-//            }
-            if self.serv == 1 {
-                self.serv = 2
-                return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
-            }else if self.serv == 2 {
-                self.serv = 3
-                return "http://89.41.180.90/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+            if self.served {
+                self.served = !self.served
+                return "https://x.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
             }else {
-                self.serv = 1
-                return "http://209.159.155.114/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+                self.served = !self.served
+                return "https://t.drmdn.app/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
             }
+//            if self.serv == 1 {
+//                self.serv = 2
+//                return "http://185.101.107.142/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+//            }else if self.serv == 2 {
+//                self.serv = 3
+//                return "http://89.41.180.90/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+//            }else {
+//                self.serv = 1
+//                return "http://209.159.155.114/videos/\(epi.seriesID)/\(epi.filename!)?token=\(md)&expires=\(tm)"
+//            }
             
 
             
