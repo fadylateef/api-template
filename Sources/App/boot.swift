@@ -108,7 +108,7 @@ public func boot(_ app: Application) throws {
                     try shellOut(to: "scp -pr /videos/\(series_id)/\(videoName) root@f.drmdn.app:/videos/\(series_id)/\(videoName)")
          //           try shellOut(to: "sshpass -pfady123 scp /videos/\(series_id)/\(videoName) root@f.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
                     ws.send(text: "\(series_id),7/12 LB1 TS Conversion ...")
-                    try shellOut(to: "ssh root@f.drmdn.app \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /ssd/videos/\(series_id)/\(hlsName) && rm -f /ssd/videos/\(series_id)/\(videoName)\" > /dev/null 2>&1 & ")
+                    try shellOut(to: "ssh root@f.drmdn.app \"ffmpeg -i /videos/\(series_id)/\(videoName) -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls /videos/\(series_id)/\(hlsName) && rm -f /videos/\(series_id)/\(videoName)\" > /dev/null 2>&1 & ")
 //                    ws.send(text: "\(series_id),8/12 Send Video to LB2")
 //                    try shellOut(to: "scp -pr /videos/\(series_id)/\(videoName) root@t.drmdn.app:/ssd/videos/\(series_id)/\(videoName)")
 //                    ws.send(text: "\(series_id),9/12 LB2 TS Conversion ...")
