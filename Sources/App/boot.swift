@@ -123,6 +123,10 @@ public func boot(_ app: Application) throws {
                     let newEpi = Episode(filename: hlsName, seriesID: Int(series_id)!, thumbnail: imageName, duration: episode_duration, order: Int(episode_id)!)
                     guard let newEpisode = try? newEpi.save(on: req) else { return }
                     ws.send(text: "\(series_id),Done ✅")
+                    if let serie_id_int = Int(series_id),let series_index = global_series.firstIndex(where: { $0.id == serie_id_int }) {
+                        global_series.move(from: series_index, to: 0)
+                    }
+                    
                     try Series.find(Int(series_id)!, on: req).map { ser in
                         if noti {
                             sendNoti(req: req, to: "\(series_id)", body: "\(ser!.title) : تم إضافة حلقة جديدة. ", badge: 1)
